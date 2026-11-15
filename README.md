@@ -1,6 +1,11 @@
 # ZOE
 
-Landing page di **ZOE**, l'assistente desktop che vive in una barra in cima allo schermo.
+**ZOE** è l'assistente desktop che vive in una barra in cima allo schermo.
+
+- `index.html`: la landing page (questa pagina)
+- `app/`: l'app desktop in Electron (prototipo). Vedi [app/README.md](app/README.md)
+
+## Landing page
 
 È una sola pagina statica (`index.html`), senza build: si apre direttamente nel browser e si pubblica su GitHub Pages.
 
