@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZOE — la tua amica in cima allo schermo</title>
+<meta name="description" content="ZOE è l'assistente desktop che vive in una barra in cima allo schermo: voce offline, IA inclusa, promemoria, musica, focus e tanta personalità. Pagamento unico, niente abbonamento.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0f1a; --bg2:#121527; --surface:#171b30; --surface2:#1f2440; --line:#2a3052;
+  --text:#eef0ff; --muted:#9aa0c3; --accent:#7c5cff; --accent-2:#ffb547; --mint:#3ee0b0; --pink:#ff5d9e;
+  --radius:20px; --max:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font:16px/1.6 Inter,system-ui,sans-serif;overflow-x:hidden}
+h1,h2,h3{font-family:Fredoka,Inter,sans-serif;line-height:1.15;font-weight:600}
+a{color:inherit}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+section{padding:96px 0;position:relative}
+.eyebrow{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);margin-bottom:12px}
+.sec-title{font-size:clamp(30px,4.4vw,46px);margin-bottom:14px}
+.sec-sub{color:var(--muted);max-width:620px;font-size:18px}
+.center{text-align:center}.center .sec-sub{margin:0 auto}
+.btn{display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;font:600 16px Inter,sans-serif;padding:15px 26px;border-radius:999px;text-decoration:none;transition:transform .15s,box-shadow .2s,background .2s}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 30px -8px rgba(124,92,255,.7)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 36px -8px rgba(124,92,255,.9)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn-ghost:hover{background:var(--surface)}
+.btn small{font-weight:500;opacity:.75}
+
+/* Offer banner */
+.offer{background:linear-gradient(90deg,#3a2a8c,#7c5cff 50%,#3a2a8c);font-size:14px;padding:10px 48px 10px 16px;text-align:center;position:relative}
+.offer b{font-variant-numeric:tabular-nums;background:rgba(0,0,0,.25);padding:2px 8px;border-radius:6px;margin:0 4px}
+.offer button{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;color:#fff;font-size:20px;cursor:pointer;opacity:.8;width:32px;height:32px}
+
+/* Nav */
+nav.top{position:sticky;top:0;z-index:50;background:rgba(13,15,26,.78);backdrop-filter:blur(14px);border-bottom:1px solid rgba(42,48,82,.6)}
+nav.top .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:20px}
+.logo{display:flex;align-items:center;gap:10px;font:700 22px Fredoka,sans-serif;text-decoration:none}
+.logo svg{width:38px;height:34px}
+.nav-links{display:flex;gap:26px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--muted);font-size:15px;font-weight:500}
+.nav-links a:hover{color:var(--text)}
+nav .btn{padding:10px 18px;font-size:14px}
+@media(max-width:860px){.nav-links{display:none}}
+
+/* Hero */
+.hero{padding:80px 0 60px;overflow:hidden;position:relative}
+.hero::before{content:"";position:absolute;inset:-200px -100px auto;height:700px;background:radial-gradient(closest-side,rgba(124,92,255,.35),transparent),radial-gradient(closest-side at 80% 40%,rgba(62,224,176,.18),transparent);pointer-events:none}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;position:relative}
+.hero h1{font-size:clamp(40px,6vw,68px);margin-bottom:20px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--mint));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:20px;color:var(--muted);max-width:540px;margin-bottom:30px}
+.hero .ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:24px}
+.ticks{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--muted);font-size:14px;list-style:none}
+.ticks li::before{content:"✓";color:var(--mint);font-weight:700;margin-right:6px}
+.hero-zoe{position:relative;display:flex;justify-content:center;align-items:center;min-height:360px}
+.hero-zoe .zoe-big{width:min(340px,80vw);animation:float 4s ease-in-out infinite;cursor:pointer;filter:drop-shadow(0 30px 40px rgba(124,92,255,.35))}
+.bubble{position:absolute;top:8px;right:8%;background:#fff;color:#1b1630;padding:10px 16px;border-radius:18px 18px 18px 4px;font-weight:600;font-size:15px;max-width:230px;box-shadow:0 10px 30px rgba(0,0,0,.3);transition:opacity .3s,transform .3s}
+.bubble.hide{opacity:0;transform:translateY(8px)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@media(max-width:860px){.hero .wrap{grid-template-columns:1fr;text-align:center}.hero p.lead{margin-left:auto;margin-right:auto}.hero .ctas,.ticks{justify-content:center}.hero-zoe{min-height:300px}}
+
+/* Mascot */
+.zoe .blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.zoe .blink.b2{animation-delay:.05s}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+.zoe .zzz{font:700 14px Fredoka,sans-serif;fill:var(--text)}
+
+/* Demo */
+.demo{background:var(--bg2)}
+.desktop{margin-top:44px;position:relative;border-radius:22px;overflow:hidden;aspect-ratio:16/9.5;max-height:620px;width:100%;background:radial-gradient(circle at 20% 80%,#ff8a5c55,transparent 45%),radial-gradient(circle at 85% 30%,#3ee0b055,transparent 40%),linear-gradient(160deg,#2b1f66,#141b3d 60%,#0b2a3a);border:1px solid var(--line);box-shadow:0 40px 80px -30px rgba(0,0,0,.8)}
+.desktop .icons{position:absolute;left:22px;top:70px;display:grid;gap:22px}
+.desktop .icons div{width:56px;text-align:center;font-size:11px;color:#dfe3ff}
+.desktop .icons i{display:block;width:44px;height:44px;margin:0 auto 4px;border-radius:12px;background:rgba(255,255,255,.14);font-style:normal;font-size:22px;line-height:44px}
+.taskbar{position:absolute;left:0;right:0;bottom:0;height:42px;background:rgba(10,12,24,.75);backdrop-filter:blur(10px);display:flex;justify-content:center;align-items:center;gap:10px}
+.taskbar span{width:26px;height:26px;border-radius:7px;background:rgba(255,255,255,.18)}
+.taskbar span:first-child{background:var(--accent)}
+.strip{position:absolute;top:0;left:50%;transform:translateX(-50%);width:300px;height:40px;background:rgba(8,9,18,.92);border-radius:0 0 22px 22px;display:flex;align-items:center;gap:12px;padding:0 16px;cursor:pointer;transition:width .45s cubic-bezier(.2,.9,.3,1.2),height .45s cubic-bezier(.2,.9,.3,1.2),border-radius .3s;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:3}
+.strip .mini{width:34px;height:30px;flex:none}
+.strip .s-time{font:600 14px Inter;font-variant-numeric:tabular-nums}
+.strip .s-water{margin-left:auto;font-size:13px;color:#9fd8ff;white-space:nowrap}
+.strip .s-row{display:flex;align-items:center;gap:12px;width:100%;height:40px;flex:none}
+.strip .panel{display:grid;grid-template-columns:150px 1fr;gap:16px;opacity:0;transition:opacity .25s;padding-bottom:16px}
+.strip.open{width:min(640px,94%);height:236px;border-radius:0 0 28px 28px;flex-direction:column;align-items:stretch;gap:6px;padding-top:0}
+.strip.open .panel{opacity:1;transition-delay:.2s}
+.panel .pz{text-align:center}
+.panel .pz svg{width:110px;height:100px}
+.panel .pz p{font-size:13px;color:var(--muted);line-height:1.35;min-height:36px}
+.widgets{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.w{background:var(--surface);border-radius:14px;padding:10px 12px;font-size:13px}
+.w h4{font:500 11px Inter;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.w b{font-size:15px}
+.w button{background:var(--surface2);border:0;color:var(--text);border-radius:8px;padding:3px 10px;cursor:pointer;font-weight:600;margin-left:6px}
+.w button:hover{background:var(--accent)}
+.prog{height:4px;background:var(--line);border-radius:4px;margin-top:6px;overflow:hidden}
+.prog i{display:block;height:100%;width:30%;background:var(--mint);transition:width .5s linear}
+.fly{position:absolute;width:14px;height:10px;z-index:4;pointer-events:none;font-size:13px;line-height:10px}
+.fly::before{content:"";position:absolute;left:4px;top:3px;width:7px;height:6px;border-radius:50%;background:#1a1a1a}
+.fly::after{content:"";position:absolute;left:2px;top:-2px;width:11px;height:6px;border-radius:50%;background:rgba(220,235,255,.7);animation:wing .06s infinite alternate}
+@keyframes wing{to{transform:scaleY(.4)}}
+.hint{text-align:center;margin-top:18px;color:var(--muted);font-size:14px}
+@media(max-width:640px){.desktop{aspect-ratio:3/4;max-height:none}.strip.open{height:auto;min-height:330px}.strip .panel{grid-template-columns:1fr}.widgets{grid-template-columns:1fr 1fr}.panel .pz svg{width:80px;height:72px}.desktop .icons{display:none}}
+
+/* Chat */
+.chat-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:36px;margin-top:44px;align-items:start}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{background:var(--surface);border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:999px;font:500 14px Inter;cursor:pointer;transition:.15s;text-align:left}
+.chip:hover,.chip.on{border-color:var(--accent);background:#241d52}
+.chat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.chat-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.chat-head svg{width:40px;height:36px}
+.chat-head small{display:block;color:var(--mint);font-size:12px}
+.chat-body{height:380px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.msg{max-width:84%;padding:10px 14px;border-radius:16px;font-size:15px;animation:pop .25s ease-out}
+.msg.me{align-self:flex-end;background:var(--accent);border-bottom-right-radius:4px}
+.msg.zo{align-self:flex-start;background:var(--surface2);border-bottom-left-radius:4px}
+.msg .acts{display:flex;gap:8px;margin-top:8px}
+.msg .acts button{border:0;border-radius:8px;padding:6px 14px;font-weight:600;cursor:pointer;background:var(--mint);color:#0d1a16}
+.msg .acts button.no{background:var(--line);color:var(--text)}
+.typing span{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin:0 2px;animation:dot 1s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+@keyframes pop{from{opacity:0;transform:translateY(6px) scale(.97)}}
+.mono{font-family:ui-monospace,Menlo,monospace;background:#0d0f1a;padding:2px 8px;border-radius:6px;word-break:break-all}
+@media(max-width:860px){.chat-grid{grid-template-columns:1fr}}
+
+/* Features */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-4px);border-color:#3b4378}
+.card .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:24px;margin-bottom:16px;background:var(--surface2)}
+.card h3{font-size:21px;margin-bottom:8px}
+.card p{color:var(--muted);font-size:15px}
+.card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.card .tags span{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--surface2);color:#c8ccef}
+.card.wide{grid-column:span 2}
+@media(max-width:900px){.grid3{grid-template-columns:1fr 1fr}.card.wide{grid-column:span 2}}
+@media(max-width:600px){.grid3{grid-template-columns:1fr}.card.wide{grid-column:auto}}
+
+/* New */
+.news{background:var(--bg2)}
+.news-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px}
+.news-item{display:flex;gap:14px;align-items:flex-start;padding:18px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.news-item i{font-style:normal;font-size:22px}
+.news-item b{display:block;margin-bottom:2px}
+.news-item span{color:var(--muted);font-size:14px}
+.badge{font-size:11px;font-weight:700;background:var(--mint);color:#0d1a16;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}
+@media(max-width:900px){.news-list{grid-template-columns:1fr 1fr}}@media(max-width:600px){.news-list{grid-template-columns:1fr}}
+
+/* Personality */
+.pers{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;margin-top:44px;align-items:center}
+.stage{background:radial-gradient(circle at 50% 60%,#2a2160,var(--surface) 70%);border:1px solid var(--line);border-radius:28px;padding:30px;text-align:center;position:sticky;top:90px}
+.stage svg{width:min(260px,70vw);height:auto}
+.stage .nm{font:600 26px Fredoka;margin-top:6px}
+.stage .ex{color:var(--muted);font-size:14px}
+.ctrl h4{font:600 13px Inter;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:22px 0 10px}
+.ctrl h4:first-child{margin-top:0}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:8px 12px;font:500 14px Inter;cursor:pointer}
+.opt.on{border-color:var(--accent);background:#241d52}
+.sw{width:36px;height:36px;border-radius:50%;border:3px solid transparent;cursor:pointer;padding:0}
+.sw.on{border-color:#fff}
+.ctrl input[type=text]{background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 14px;font:500 16px Inter;width:220px;max-width:100%}
+.ctrl input:focus{outline:2px solid var(--accent);border-color:transparent}
+.idle-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.idle-list div{background:var(--surface);border-radius:12px;padding:10px 14px;font-size:14px;color:#c8ccef}
+@media(max-width:860px){.pers{grid-template-columns:1fr}.stage{position:relative;top:0}}
+
+/* Privacy */
+.priv{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:44px}
+.priv div{padding:22px;border-radius:18px;background:linear-gradient(180deg,var(--surface),var(--bg));border:1px solid var(--line)}
+.priv i{font-style:normal;font-size:26px;display:block;margin-bottom:10px}
+.priv b{display:block;margin-bottom:4px;font-family:Fredoka;font-size:18px;font-weight:600}
+.priv span{color:var(--muted);font-size:14px}
+@media(max-width:900px){.priv{grid-template-columns:1fr 1fr}}@media(max-width:520px){.priv{grid-template-columns:1fr}}
+
+/* Install */
+.install{background:var(--bg2)}
+.inst{display:grid;grid-template-columns:1.3fr .7fr;gap:30px;margin-top:44px}
+.steps{list-style:none;counter-reset:s;display:grid;gap:12px}
+.steps li{counter-increment:s;display:flex;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+.steps li::before{content:counter(s);flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);display:grid;place-items:center;font:700 16px Fredoka}
+.steps b{display:block}
+.steps span{color:var(--muted);font-size:14px}
+.note{margin-top:14px;padding:14px 18px;border-radius:14px;background:#2b2414;border:1px solid #5a4a1f;color:#f3dca5;font-size:14px}
+.req{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px;align-self:start}
+.req h3{margin-bottom:14px}
+.req dl{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;font-size:14px}
+.req dt{color:var(--muted)}
+@media(max-width:860px){.inst{grid-template-columns:1fr}}
+
+/* Price */
+.price-card{max-width:480px;margin:44px auto 0;background:linear-gradient(180deg,#221b55,var(--surface));border:1px solid #4b3fa8;border-radius:28px;padding:36px;text-align:center;position:relative;box-shadow:0 30px 80px -30px rgba(124,92,255,.6)}
+.price-card .tag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--accent-2);color:#2a1a00;font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px;white-space:nowrap}
+.price-card .old{color:var(--muted);text-decoration:line-through;font-size:18px}
+.price-card .amt{font:700 64px Fredoka;line-height:1;margin:6px 0}
+.price-card .once{color:var(--mint);font-weight:600;margin-bottom:22px}
+.price-card ul{list-style:none;text-align:left;display:grid;gap:10px;margin:0 0 26px}
+.price-card li::before{content:"✓";color:var(--mint);font-weight:700;margin-right:10px}
+.price-card .btn{width:100%;justify-content:center}
+.price-card .pay{margin-top:14px;font-size:13px;color:var(--muted)}
+
+/* FAQ */
+.faq{max-width:780px;margin:44px auto 0;display:grid;gap:10px}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:0 20px}
+.faq summary{cursor:pointer;list-style:none;padding:18px 0;font-weight:600;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:22px;line-height:1;color:var(--accent);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{color:var(--muted);padding-bottom:18px}
+
+/* Footer */
+footer{padding:80px 0 40px;text-align:center;border-top:1px solid var(--line)}
+footer h2{font-size:clamp(28px,4vw,42px);margin:10px 0 24px}
+footer .small{color:var(--muted);font-size:13px;margin-top:40px;line-height:1.8}
+footer svg.fz{width:90px;height:80px}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div class="offer" id="offer" hidden>
+  🎉 Prezzo di lancio <strong id="offerPrice"></strong> ancora per <b id="countdown">--:--:--</b> · aggiornamenti gratuiti per sempre
+  <button aria-label="Chiudi" onclick="closeOffer()">×</button>
+</div>
+
+<nav class="top">
+  <div class="wrap">
+    <a href="#" class="logo"><svg class="zoe" data-mini viewBox="0 -12 120 112"></svg><span>ZOE</span></a>
+    <ul class="nav-links">
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#funzioni">Funzioni</a></li>
+      <li><a href="#personalita">Personalità</a></li>
+      <li><a href="#installa">Installa</a></li>
+      <li><a href="#prezzo">Prezzo</a></li>
+      <li><a href="#faq">Domande</a></li>
+    </ul>
+    <a class="btn btn-primary buy" href="#prezzo">Prendi ZOE · <span class="price"></span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Assistente desktop · v<span class="ver"></span></span>
+      <h1>Un'amica che vive <em>in cima al tuo schermo</em></h1>
+      <p class="lead">ZOE si nasconde in una piccola barra in alto. Passaci sopra o chiamala per nome: mette la musica, ti ricorda le cose, sistema il desktop e ti fa compagnia mentre lavori.</p>
+      <div class="ctas">
+        <a class="btn btn-primary buy" href="#prezzo">Voglio ZOE · <span class="price"></span></a>
+        <a class="btn btn-ghost" href="#demo">Guarda la demo ↓</a>
+      </div>
+      <ul class="ticks">
+        <li>Pagamento unico</li><li>Niente abbonamento</li><li>IA gratuita inclusa</li><li>Aggiornamenti inclusi</li><li>Windows 10 e 11 · macOS</li>
+      </ul>
+    </div>
+    <div class="hero-zoe">
+      <div class="bubble" id="heroBubble">Ciao! Sono ZOE 👋</div>
+      <svg class="zoe zoe-big" id="heroZoe" viewBox="0 -12 120 112" role="img" aria-label="La mascotte ZOE"></svg>
+    </div>
+  </div>
+</header>
+
+<!-- DEMO -->
+<section class="demo" id="demo">
+  <div class="wrap center">
+    <span class="eyebrow">Demo interattiva</span>
+    <h2 class="sec-title">Sempre lì, mai in mezzo</h2>
+    <p class="sec-sub">Una barra sottile in alto al centro. Quando ti serve si apre, quando hai finito sparisce. Provala qui sotto.</p>
+    <div class="desktop" id="desktop">
+      <div class="strip" id="strip" tabindex="0" aria-label="Barra di ZOE, clicca per aprire">
+        <div class="s-row">
+          <svg class="zoe mini" id="stripZoe" viewBox="0 -12 120 112"></svg>
+          <span class="s-time" id="clock">--:--</span>
+          <span class="s-water">💧 <span class="wcount">3</span>/8 bicchieri</span>
+        </div>
+        <div class="panel">
+          <div class="pz">
+            <svg class="zoe" id="panelZoe" viewBox="0 -12 120 112"></svg>
+            <p id="panelMsg">Ciao! Cosa facciamo oggi?</p>
+          </div>
+          <div class="widgets">
+            <div class="w"><h4>Meteo</h4><b>Milano 14°</b><br>☁️ nuvoloso</div>
+            <div class="w"><h4>Prossimo evento</h4><b>15:30</b><br>Call con il team</div>
+            <div class="w"><h4>Musica</h4><b id="track">Lo-fi per studiare</b><button id="playBtn" aria-label="Play/Pausa">▶</button><div class="prog"><i id="prog"></i></div></div>
+            <div class="w"><h4>Acqua</h4><b><span class="wcount">3</span>/8</b> bicchieri<button id="waterBtn">+1</button><div class="prog"><i id="wprog" style="width:37.5%;background:#6cc8ff"></i></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="fly" id="fly" aria-hidden="true"></div>
+      <div class="icons"><div><i>🗂️</i>Progetti</div><div><i>🎮</i>Giochi</div><div><i>🗑️</i>Cestino</div></div>
+      <div class="taskbar"><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+    <p class="hint">Passa il mouse o tocca la barra in alto · lasciala stare qualche secondo e guarda cosa fa</p>
+  </div>
+</section>
+
+<!-- CHAT -->
+<section id="parla">
+  <div class="wrap">
+    <span class="eyebrow">Parla come vuoi</span>
+    <h2 class="sec-title">Dille le cose come le diresti a un'amica</h2>
+    <p class="sec-sub">A voce o scrivendo, senza comandi da imparare. Clicca un esempio e guarda come risponde.</p>
+    <div class="chat-grid">
+      <div class="chips" id="chips"></div>
+      <div class="chat">
+        <div class="chat-head"><svg class="zoe" id="chatZoe" viewBox="0 -12 120 112"></svg><div><b class="zname">ZOE</b><small>● in ascolto</small></div></div>
+        <div class="chat-body" id="chatBody"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="funzioni" style="padding-top:40px">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow">Tutto in un posto</span>
+      <h2 class="sec-title">Una sola app al posto di dieci</h2>
+      <p class="sec-sub">Tutto quello che ti serve durante la giornata, a un passaggio di mouse.</p>
+    </div>
+    <div class="grid3">
+      <div class="card reveal wide"><div class="ic">🎙️</div><h3>Voce che funziona offline</h3><p>Dì "Ehi ZOE" e parla. Il riconoscimento vocale gira sul tuo PC: niente cloud e risposta immediata. Preferisci tenere premuto un tasto? C'è anche il push-to-talk.</p><div class="tags"><span>Parola di attivazione</span><span>Push-to-talk</span><span>Voce naturale</span></div></div>
+      <div class="card reveal"><div class="ic">🧠</div><h3>IA gratis inclusa</h3><p>Funziona subito, senza chiavi. Se vuoi un cervello diverso puoi collegare il tuo account.</p><div class="tags"><span>Claude</span><span>ChatGPT</span><span>Gemini</span><span>IA locale</span></div></div>
+      <div class="card reveal"><div class="ic">📱</div><h3>Telefono e calendario</h3><p>Collega lo smartphone con un QR code e sincronizza gli eventi di Google Calendar e iCloud.</p></div>
+      <div class="card reveal"><div class="ic">🎧</div><h3>Musica in cima allo schermo</h3><p>Play, pausa, salta e volume dalla barra, senza aprire Spotify.</p></div>
+      <div class="card reveal"><div class="ic">⏰</div><h3>Promemoria e sveglie</h3><p>"Ricordami alle 18 di…" e sei a posto. Liste di cose da fare, sveglie e scadenze.</p></div>
+      <div class="card reveal"><div class="ic">🍅</div><h3>Focus e Pomodoro</h3><p>Sessioni di studio con pause, statistiche e modalità "non disturbare".</p></div>
+      <div class="card reveal"><div class="ic">💧</div><h3>Benessere</h3><p>Acqua, postura, pause per gli occhi. Ti ricorda le abitudini che contano, con gentilezza.</p></div>
+      <div class="card reveal"><div class="ic">📋</div><h3>Appunti e note</h3><p>Cronologia di tutto ciò che copi e note veloci sempre a portata.</p></div>
+      <div class="card reveal wide"><div class="ic">🗂️</div><h3>Sistema il desktop per te</h3><p>"Metti in ordine la scrivania": ZOE raggruppa i file in cartelle e ti chiede conferma prima di spostare qualsiasi cosa. Cerca file, apre programmi, programma lo spegnimento.</p><div class="tags"><span>Organizza file</span><span>Cerca file</span><span>Apri app</span><span>Timer spegnimento</span></div></div>
+      <div class="card reveal"><div class="ic">🧩</div><h3>Widget</h3><p>Orologio, meteo, calendario e notifiche sul desktop, nel tuo stile.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="news" id="novita">
+  <div class="wrap">
+    <div class="center reveal"><span class="eyebrow">Novità</span><h2 class="sec-title">Appena arrivate</h2></div>
+    <div class="news-list">
+      <div class="news-item reveal"><i>🎤</i><div><b>Push-to-talk <span class="badge">NEW</span></b><span>Tieni premuto un tasto e parla, senza microfono sempre acceso.</span></div></div>
+      <div class="news-item reveal"><i>🤫</i><div><b>Modalità silenziosa</b><span>Esegue i comandi senza rispondere a voce.</span></div></div>
+      <div class="news-item reveal"><i>⚡</i><div><b>Modalità prestazioni</b><span>Animazioni ridotte per PC meno potenti e giochi.</span></div></div>
+      <div class="news-item reveal"><i>🖥️</i><div><b>Secondo monitor</b><span>Trascina la barra sullo schermo che preferisci.</span></div></div>
+      <div class="news-item reveal"><i>👻</i><div><b>Modalità invisibile</b><span>Sparisce del tutto finché non la chiami.</span></div></div>
+      <div class="news-item reveal"><i>🔊</i><div><b>Volume sulla barra</b><span>Cambia il volume e vedi il livello in cima allo schermo.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONALITY -->
+<section id="personalita">
+  <div class="wrap">
+    <div class="center reveal">
+      <span class="eyebrow">Ha personalità</span>
+      <h2 class="sec-title">Non è un'icona. È un personaggio.</h2>
+      <p class="sec-sub">Cambia espressione mentre parlate e, quando non fai niente, si annoia. Falla tua: colore, occhi, nome e accessori.</p>
+    </div>
+    <div class="pers">
+      <div class="stage">
+        <svg class="zoe" id="stageZoe" viewBox="0 -12 120 112"></svg>
+        <div class="nm zname">ZOE</div>
+        <div class="ex" id="exLabel">felice</div>
+      </div>
+      <div class="ctrl">
+        <h4>Espressioni</h4><div class="opts" id="optExpr"></div>
+        <h4>Colore</h4><div class="opts" id="optColor"></div>
+        <h4>Occhi</h4><div class="opts" id="optEyes"></div>
+        <h4>Accessori</h4><div class="opts" id="optAcc"></div>
+        <h4>Nome</h4><input type="text" id="nameInput" maxlength="14" value="ZOE" aria-label="Nome della tua assistente">
+        <h4>Quando si annoia…</h4>
+        <div class="idle-list"><div>🪰 insegue una mosca</div><div>⚽ gioca con la palla</div><div>😴 si appisola</div><div>👀 ti guarda lavorare</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="center reveal"><span class="eyebrow">Il tuo PC, le tue cose</span><h2 class="sec-title">Privacy prima di tutto</h2></div>
+    <div class="priv">
+      <div class="reveal"><i>🙅</i><b>Nessun account</b><span>Installi e usi. Niente registrazioni né login.</span></div>
+      <div class="reveal"><i>💾</i><b>Dati in locale</b><span>Note, promemoria e impostazioni restano sul tuo computer.</span></div>
+      <div class="reveal"><i>🎙️</i><b>Voce offline</b><span>Il microfono non manda audio su internet. L'IA può girare in locale.</span></div>
+      <div class="reveal"><i>🔐</i><b>Chiavi cifrate</b><span>Le tue API key sono salvate cifrate sul disco.</span></div>
+      <div class="reveal"><i>✋</i><b>Chiede prima</b><span>Conferma sempre prima di cancellare o spostare file.</span></div>
+      <div class="reveal"><i>🎮</i><b>Si fa da parte</b><span>Si nasconde da sola con giochi e video a schermo intero.</span></div>
+      <div class="reveal"><i>👂</i><b>Ascolto opzionale</b><span>L'ascolto continuo lo decidi tu e si spegne con un clic.</span></div>
+      <div class="reveal"><i>🪶</i><b>Leggera</b><span>Circa 110 MB di installer, consumi minimi in background.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<section class="install" id="installa" style="background:var(--bg)">
+  <div class="wrap">
+    <div class="center reveal"><span class="eyebrow">Installa</span><h2 class="sec-title">Pronta in 2 minuti</h2></div>
+    <div class="inst">
+      <div>
+        <ol class="steps">
+          <li><div><b>Scarica l'installer</b><span>Dopo l'acquisto ricevi via email il link per ZOE-Setup e la tua chiave di attivazione.</span></div></li>
+          <li><div><b>Avvia l'installazione</b><span>Doppio clic sul file e segui i passaggi.</span></div></li>
+          <li><div><b>Primo avvio</b><span>Una breve guida ti presenta ZOE e ti chiede la chiave.</span></div></li>
+          <li><div><b>Scegli il cervello</b><span>IA gratuita inclusa, IA locale o la tua chiave Claude, ChatGPT o Gemini.</span></div></li>
+          <li><div><b>Attiva la voce</b><span>Consenti il microfono e prova "Ehi ZOE".</span></div></li>
+          <li><div><b>Passa sulla barra</b><span>Muovi il mouse in alto al centro dello schermo. Eccola!</span></div></li>
+        </ol>
+        <p class="note">⚠️ Le app nuove spesso non sono ancora riconosciute da Windows SmartScreen. Se compare l'avviso, clicca <b>"Ulteriori informazioni"</b> e poi <b>"Esegui comunque"</b>.</p>
+      </div>
+      <div class="req">
+        <h3>Requisiti</h3>
+        <dl>
+          <dt>Sistema</dt><dd>Windows 10/11 64-bit · macOS 12+ (Apple Silicon e Intel)</dd>
+          <dt>RAM</dt><dd>4 GB (8 GB+ per l'IA locale)</dd>
+          <dt>Disco</dt><dd>300 MB (+2 GB per l'IA locale)</dd>
+          <dt>Microfono</dt><dd>Opzionale, per la voce</dd>
+          <dt>Internet</dt><dd>Solo per IA online, meteo e aggiornamenti</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICE -->
+<section id="prezzo" style="background:var(--bg2)">
+  <div class="wrap center">
+    <span class="eyebrow">Prezzo</span>
+    <h2 class="sec-title">Paghi una volta. È tua per sempre.</h2>
+    <p class="sec-sub">Niente abbonamenti, niente rinnovi, niente sorprese.</p>
+    <div class="price-card reveal">
+      <span class="tag" id="priceTag">Licenza a vita</span>
+      <div class="old" id="oldPrice"></div>
+      <div class="amt price"></div>
+      <div class="once">pagamento unico</div>
+      <ul>
+        <li>Tutte le funzioni, senza limiti</li>
+        <li>IA gratuita inclusa</li>
+        <li>Aggiornamenti futuri gratuiti</li>
+        <li>Windows e macOS</li>
+        <li>Download immediato via email</li>
+        <li>Supporto via Instagram ed email</li>
+      </ul>
+      <a class="btn btn-primary buy-link" href="#">Acquista ora · <span class="price"></span></a>
+      <p class="pay">Carta, PayPal, Apple Pay e Google Pay · pagamento sicuro</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="center"><span class="eyebrow">Domande</span><h2 class="sec-title">Domande frequenti</h2></div>
+    <div class="faq">
+      <details><summary>C'è un abbonamento?</summary><p>No. Paghi una volta e ZOE è tua per sempre, aggiornamenti compresi.</p></details>
+      <details><summary>Come la ricevo dopo l'acquisto?</summary><p>Ricevi subito un'email con il link per scaricare l'installer e la tua chiave di attivazione personale.</p></details>
+      <details><summary>L'IA costa qualcosa in più?</summary><p>No, l'IA di base è inclusa. Se vuoi puoi collegare la tua chiave di Claude, ChatGPT o Gemini; in quel caso eventuali costi sono quelli del fornitore che scegli.</p></details>
+      <details><summary>Mi ascolta sempre?</summary><p>Solo se lo vuoi. Puoi usare la parola di attivazione, il push-to-talk o disattivare il microfono. Il riconoscimento vocale avviene sul tuo computer.</p></details>
+      <details><summary>Funziona sul mio Windows?</summary><p>Sì, su Windows 10 e 11 a 64 bit.</p></details>
+      <details><summary>Rallenta i giochi o dà fastidio nei video?</summary><p>No. Si nasconde in automatico con le app a schermo intero e c'è una modalità prestazioni che riduce le animazioni.</p></details>
+      <details><summary>C'è la versione per Mac?</summary><p>Sì, per Apple Silicon e Intel. Alcune funzioni legate a Windows, come l'organizzazione di certe cartelle di sistema, possono essere diverse.</p></details>
+      <details><summary>Posso avere un rimborso?</summary><p>Se ZOE non funziona sul tuo computer scrivici entro 14 giorni e troviamo una soluzione o ti rimborsiamo.</p></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <svg class="zoe fz" id="footZoe" viewBox="0 -12 120 112"></svg>
+    <h2>Pronta a conoscere <span class="zname">ZOE</span>?</h2>
+    <a class="btn btn-primary buy" href="#prezzo">Prendi ZOE · <span class="price"></span></a>
+    <p class="small">
+      Contatti: <a id="contact" href="#"></a><br>
+      ZOE usa componenti open source: Vosk (Apache 2.0), Piper (MIT), Electron (MIT).<br>
+      Windows è un marchio di Microsoft. Spotify è un marchio di Spotify AB. macOS è un marchio di Apple Inc.<br>
+      © <span id="year"></span> ZOE
+    </p>
+  </div>
+</footer>
+
+<script>
+/* ======== CONFIG: modifica qui prezzi, link e contatti ======== */
+const CONFIG = {
+  price: '€ 19,90',
+  oldPrice: '€ 39,90',
+  version: '1.0.0',
+  buyUrl: '#',                               // link di pagamento (es. Stripe Payment Link)
+  offerEnds: '2026-12-31T23:59:59',          // fine del prezzo di lancio (vero, non finto)
+  contact: { label: '@zoe.assistente', url: 'https://instagram.com/' }
+};
+
+/* ======== MASCOT ======== */
+const DARK = '#1b1630';
+const EXPR = {
+  felice:     {eyes:'open',  mouth:'M50 72 Q60 82 70 72', cheeks:1},
+  contenta:   {eyes:'open',  mouth:'M53 73 Q60 77 67 73'},
+  ride:       {eyes:'laugh', mouth:'fill', cheeks:1},
+  sorpresa:   {eyes:'big',   mouth:'o'},
+  assonnata:  {eyes:'half',  mouth:'M55 76 Q60 74 65 76'},
+  dorme:      {eyes:'closed',mouth:'M56 76 Q60 78 64 76', zzz:1},
+  arrabbiata: {eyes:'open',  mouth:'M50 79 Q60 70 70 79', brows:'angry'},
+  triste:     {eyes:'open',  mouth:'M51 79 Q60 71 69 79', brows:'sad'},
+  innamorata: {eyes:'heart', mouth:'M52 72 Q60 80 68 72', cheeks:1},
+  pensierosa: {eyes:'open',  mouth:'M53 76 L67 74', brows:'think', look:[-3,-3]},
+  occhiolino: {eyes:'wink',  mouth:'M50 72 Q60 81 70 72', cheeks:1},
+  emozionata: {eyes:'star',  mouth:'fill', cheeks:1},
+  confusa:    {eyes:'open',  mouth:'M52 76 Q56 73 60 76 Q64 79 68 76', brows:'think'}
+};
+const EYE_SIZES = {tondi:[9,11], grandi:[11,13.5], piccoli:[6.5,7.5], anime:[10,13]};
+const COLORS = ['#7c5cff','#3ee0b0','#ff7a59','#ff5d9e','#4cc3ff','#ffc93c','#9aa0c3','#2f2f3a'];
+const ACCS = {
+  nessuno:'', cappellino:'', cilindro:'', corona:'', fiocco:'', occhiali:'', 'occhiali da sole':'',
+  cuffie:'', sciarpa:'', fiore:'', antenna:'', papillon:''
+};
+
+function shade(hex, amt){
+  let n = parseInt(hex.slice(1),16), r=(n>>16)+amt, g=((n>>8)&255)+amt, b=(n&255)+amt;
+  const c=v=>Math.max(0,Math.min(255,v));
+  return '#'+((1<<24)+(c(r)<<16)+(c(g)<<8)+c(b)).toString(16).slice(1);
+}
+function heart(cx,cy,s){return `<path d="M${cx} ${cy+s*.9} C${cx-s*1.6} ${cy-s*.1} ${cx-s*.9} ${cy-s*1.3} ${cx} ${cy-s*.4} C${cx+s*.9} ${cy-s*1.3} ${cx+s*1.6} ${cy-s*.1} ${cx} ${cy+s*.9}Z" fill="#ff4d8d"/>`;}
+function star(cx,cy,r){let p=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;p.push((cx+Math.cos(a)*rr).toFixed(1)+','+(cy+Math.sin(a)*rr).toFixed(1));}return `<polygon points="${p.join(' ')}" fill="#ffc93c"/>`;}
+
+function eye(cx, cy, mode, style, color, idx){
+  let [rx,ry] = EYE_SIZES[style] || EYE_SIZES.tondi;
+  if(mode==='big'){rx*=1.15;ry*=1.2}
+  const stroke = `stroke="${DARK}" stroke-width="3" stroke-linecap="round" fill="none"`;
+  if(mode==='closed') return `<path d="M${cx-rx} ${cy} Q${cx} ${cy+6} ${cx+rx} ${cy}" ${stroke}/>`;
+  if(mode==='laugh' || (mode==='wink' && idx===1)) return `<path d="M${cx-rx} ${cy+3} Q${cx} ${cy-7} ${cx+rx} ${cy+3}" ${stroke}/>`;
+  if(mode==='heart') return heart(cx,cy,rx*.85);
+  const pr = style==='piccoli'? rx*.7 : rx*.55;
+  const pupil = (mode==='star' || style==='stelle')
+    ? star(cx,cy,pr*1.3)
+    : `<circle cx="${cx}" cy="${cy}" r="${pr}" fill="${DARK}"/><circle cx="${cx-pr*.4}" cy="${cy-pr*.5}" r="${pr*.35}" fill="#fff"/>${style==='anime'?`<circle cx="${cx+pr*.4}" cy="${cy+pr*.4}" r="${pr*.18}" fill="#fff"/>`:''}`;
+  let s = `<g class="blink${idx?' b2':''}"><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff"/><g class="zp">${pupil}</g></g>`;
+  if(mode==='half') s += `<rect x="${cx-rx-2}" y="${cy-ry-2}" width="${rx*2+4}" height="${ry+2}" fill="${color}"/><path d="M${cx-rx} ${cy} H${cx+rx}" ${stroke}/>`;
+  return s;
+}
+
+function accessory(name, color){
+  switch(name){
+    case 'cappellino': return `<path d="M30 30 Q34 4 60 4 Q86 4 90 30 Z" fill="#ffb547"/><path d="M60 26 H100 Q104 30 98 32 H60 Z" fill="#e8962a"/><circle cx="60" cy="5" r="4" fill="#e8962a"/>`;
+    case 'cilindro': return `<rect x="44" y="-10" width="32" height="30" rx="3" fill="#22223a"/><rect x="44" y="12" width="32" height="5" fill="#ff5d9e"/><rect x="34" y="18" width="52" height="6" rx="3" fill="#22223a"/>`;
+    case 'corona': return `<polygon points="42,26 42,8 51,17 60,3 69,17 78,8 78,26" fill="#ffc93c" stroke="#e0a400" stroke-width="2" stroke-linejoin="round"/><circle cx="60" cy="18" r="3" fill="#ff5d9e"/>`;
+    case 'fiocco': return `<g transform="translate(84 24) rotate(15)"><path d="M0 0 L-14 -9 L-14 9 Z M0 0 L14 -9 L14 9 Z" fill="#ff5d9e" stroke="#e03c80" stroke-width="2" stroke-linejoin="round"/><circle r="4" fill="#e03c80"/></g>`;
+    case 'occhiali': return `<g fill="none" stroke="${DARK}" stroke-width="3"><circle cx="45" cy="52" r="14"/><circle cx="75" cy="52" r="14"/><path d="M59 50 Q60 47 61 50"/><path d="M31 50 L18 46 M89 50 L102 46"/></g>`;
+    case 'occhiali da sole': return `<g><rect x="29" y="42" width="30" height="20" rx="8" fill="#111"/><rect x="61" y="42" width="30" height="20" rx="8" fill="#111"/><path d="M59 48 H61" stroke="#111" stroke-width="4"/><path d="M34 47 l8 0" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/><path d="M66 47 l8 0" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/></g>`;
+    case 'cuffie': return `<path d="M20 54 Q18 6 60 6 Q102 6 100 54" fill="none" stroke="#2f2f3a" stroke-width="7" stroke-linecap="round"/><rect x="9" y="44" width="15" height="26" rx="7" fill="#2f2f3a"/><rect x="96" y="44" width="15" height="26" rx="7" fill="#2f2f3a"/><rect x="12" y="49" width="9" height="16" rx="4" fill="#3ee0b0"/><rect x="99" y="49" width="9" height="16" rx="4" fill="#3ee0b0"/>`;
+    case 'sciarpa': return `<rect x="22" y="80" width="76" height="12" rx="6" fill="#ff5a5a"/><path d="M78 86 L86 102 L96 100 L90 86 Z" fill="#e04444"/><path d="M30 83 v6 M40 83 v6 M50 83 v6" stroke="#fff" stroke-opacity=".35" stroke-width="3"/>`;
+    case 'fiore': { let p=''; for(let i=0;i<5;i++){const a=i*72*Math.PI/180;p+=`<circle cx="${(84+Math.cos(a)*6).toFixed(1)}" cy="${(22+Math.sin(a)*6).toFixed(1)}" r="5" fill="#fff"/>`;} return p+`<circle cx="84" cy="22" r="4" fill="#ffc93c"/>`; }
+    case 'antenna': return `<path d="M60 20 Q58 10 62 2" stroke="${shade(color,-40)}" stroke-width="3" fill="none"/><circle cx="62" cy="0" r="5" fill="#3ee0b0"><animate attributeName="opacity" values="1;.4;1" dur="1.6s" repeatCount="indefinite"/></circle>`;
+    case 'papillon': return `<g transform="translate(60 88)"><path d="M0 0 L-13 -8 L-13 8 Z M0 0 L13 -8 L13 8 Z" fill="#ff5d9e" stroke="#c93578" stroke-width="2" stroke-linejoin="round"/><circle r="3.5" fill="#c93578"/></g>`;
+  }
+  return '';
+}
+const BEHIND = new Set(['cuffie']);
+
+function renderZoe(svg, st){
+  const e = EXPR[st.expr] || EXPR.felice, c = st.color;
+  let o = '';
+  o += `<ellipse cx="60" cy="96" rx="34" ry="4" fill="#000" opacity=".25"/>`;
+  o += `<ellipse cx="42" cy="91" rx="11" ry="6" fill="${shade(c,-40)}"/><ellipse cx="78" cy="91" rx="11" ry="6" fill="${shade(c,-40)}"/>`;
+  if(BEHIND.has(st.acc)) o += accessory(st.acc,c);
+  o += `<rect x="15" y="20" width="90" height="72" rx="36" fill="${c}"/>`;
+  o += `<ellipse cx="44" cy="32" rx="20" ry="9" fill="#fff" opacity=".16"/>`;
+  if(e.cheeks) o += `<ellipse cx="31" cy="66" rx="7" ry="4" fill="#ff7aa8" opacity=".55"/><ellipse cx="89" cy="66" rx="7" ry="4" fill="#ff7aa8" opacity=".55"/>`;
+  o += eye(45,52,e.eyes,st.eyes,c,0) + eye(75,52,e.eyes,st.eyes,c,1);
+  const bs = `stroke="${DARK}" stroke-width="3" stroke-linecap="round" fill="none"`;
+  if(e.brows==='angry') o += `<path d="M34 36 L52 42 M86 36 L68 42" ${bs}/>`;
+  if(e.brows==='sad')   o += `<path d="M35 42 L52 36 M85 42 L68 36" ${bs}/>`;
+  if(e.brows==='think') o += `<path d="M36 38 L52 38 M68 36 Q76 30 85 35" ${bs}/>`;
+  if(e.mouth==='fill')  o += `<path d="M48 70 Q60 88 72 70 Z" fill="${DARK}"/><path d="M54 79 Q60 84 66 79 Q60 76 54 79Z" fill="#ff6b8b"/>`;
+  else if(e.mouth==='o')o += `<ellipse cx="60" cy="76" rx="5" ry="6.5" fill="${DARK}"/>`;
+  else o += `<path d="${e.mouth}" ${bs}/>`;
+  if(st.acc && !BEHIND.has(st.acc)) o += accessory(st.acc,c);
+  if(e.zzz) o += `<text class="zzz" x="94" y="22">z<animate attributeName="y" values="24;8" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="2s" repeatCount="indefinite"/></text><text class="zzz" x="102" y="10" font-size="10">z<animate attributeName="y" values="14;-4" dur="2s" begin="1s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="2s" begin="1s" repeatCount="indefinite"/></text>`;
+  svg.innerHTML = o;
+  svg.dataset.look = e.look ? e.look.join(',') : '';
+  if(e.look) lookAt(svg, ...e.look, true);
+}
+function lookAt(svg, dx, dy, fixed){
+  if(!fixed && svg.dataset.look) return;
+  svg.querySelectorAll('.zp').forEach(g=>g.setAttribute('transform',`translate(${dx.toFixed(2)} ${dy.toFixed(2)})`));
+}
+function lookToward(svg, x, y){
+  const r = svg.getBoundingClientRect(); if(!r.width) return;
+  const cx = r.left + r.width/2, cy = r.top + r.height*.45;
+  let dx = x-cx, dy = y-cy; const d = Math.hypot(dx,dy)||1, m = Math.min(1,d/200)*3.6;
+  lookAt(svg, dx/d*m, dy/d*m);
+}
+
+/* ======== STATE ======== */
+const S = {color:COLORS[0], eyes:'tondi', acc:'nessuno', name:'ZOE'};
+try{ Object.assign(S, JSON.parse(localStorage.getItem('zoe-look')||'{}')); }catch(e){}
+function save(){ try{ localStorage.setItem('zoe-look', JSON.stringify(S)); }catch(e){} }
+
+const Z = {}; // svg -> current expression
+function setExpr(id, expr){
+  const svg = typeof id==='string' ? document.getElementById(id) : id; if(!svg) return;
+  Z[svg.id||'logo'] = expr;
+  renderZoe(svg, {...S, acc: svg.hasAttribute('data-mini') ? 'nessuno' : S.acc, expr});
+}
+function renderAll(){
+  document.querySelectorAll('svg.zoe').forEach(svg=> setExpr(svg, Z[svg.id||'logo'] || 'felice'));
+  document.querySelectorAll('.zname').forEach(n=>n.textContent=S.name||'ZOE');
+}
+
+/* ======== CONFIG apply ======== */
+document.querySelectorAll('.price').forEach(n=>n.textContent=CONFIG.price);
+document.querySelectorAll('.ver').forEach(n=>n.textContent=CONFIG.version);
+document.querySelectorAll('.buy-link').forEach(a=>a.href=CONFIG.buyUrl);
+document.getElementById('oldPrice').textContent = CONFIG.oldPrice || '';
+document.getElementById('offerPrice').textContent = CONFIG.price;
+const ct = document.getElementById('contact'); ct.textContent = CONFIG.contact.label; ct.href = CONFIG.contact.url;
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* Offer countdown — real deadline */
+const offerEl = document.getElementById('offer'), end = new Date(CONFIG.offerEnds).getTime();
+let offerClosed = false; try{ offerClosed = sessionStorage.getItem('zoe-offer')==='x'; }catch(e){}
+function tick(){
+  const left = end - Date.now();
+  if(left<=0 || isNaN(left)){ offerEl.hidden = true; document.getElementById('priceTag').textContent='Licenza a vita'; document.getElementById('oldPrice').textContent=''; return; }
+  document.getElementById('priceTag').textContent = 'Prezzo di lancio';
+  if(!offerClosed) offerEl.hidden = false;
+  const d=Math.floor(left/864e5), h=Math.floor(left/36e5)%24, m=Math.floor(left/6e4)%60, s=Math.floor(left/1e3)%60, p=n=>String(n).padStart(2,'0');
+  document.getElementById('countdown').textContent = (d?d+'g ':'')+p(h)+':'+p(m)+':'+p(s);
+}
+function closeOffer(){ offerClosed=true; offerEl.hidden=true; try{sessionStorage.setItem('zoe-offer','x')}catch(e){} }
+tick(); setInterval(tick,1000);
+
+/* ======== HERO ======== */
+const heroLines = ['Ciao! Sono ZOE 👋','Mi chiami per nome? Arrivo!','Hai bevuto acqua oggi? 💧','Metto un po\' di musica? 🎧','Ehi, mi fai il solletico! 😆','Facciamo 25 minuti di focus?','Ti tengo d\'occhio io 👀'];
+const heroExpr = ['ride','occhiolino','innamorata','emozionata','sorpresa','felice'];
+const bubble = document.getElementById('heroBubble');
+let heroT;
+document.getElementById('heroZoe').addEventListener('click',()=>{
+  setExpr('heroZoe', heroExpr[Math.floor(Math.random()*heroExpr.length)]);
+  bubble.textContent = heroLines[Math.floor(Math.random()*heroLines.length)].replace('ZOE',S.name);
+  bubble.classList.remove('hide');
+  clearTimeout(heroT); heroT = setTimeout(()=>setExpr('heroZoe','felice'),1800);
+});
+
+/* Eyes follow the cursor */
+let mx = innerWidth/2, my = innerHeight/2;
+addEventListener('pointermove', e=>{ mx=e.clientX; my=e.clientY; });
+
+/* ======== DEMO ======== */
+const strip = document.getElementById('strip'), desktop = document.getElementById('desktop');
+const panelMsg = document.getElementById('panelMsg');
+function clock(){ const d=new Date(); document.getElementById('clock').textContent = d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}); }
+clock(); setInterval(clock,10000);
+const canHover = matchMedia('(hover:hover)').matches;
+function openStrip(v){ strip.classList.toggle('open', v); if(v){ wake(); setExpr('panelZoe','felice'); } }
+if(canHover){ strip.addEventListener('mouseenter',()=>openStrip(true)); strip.addEventListener('mouseleave',()=>openStrip(false)); }
+strip.addEventListener('click',e=>{ if(e.target.closest('button')) return; if(!canHover) openStrip(!strip.classList.contains('open')); });
+strip.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openStrip(!strip.classList.contains('open')); }});
+
+let water = 3;
+document.getElementById('waterBtn').addEventListener('click',()=>{
+  water = water>=8 ? 0 : water+1;
+  document.querySelectorAll('.wcount').forEach(n=>n.textContent=water);
+  document.getElementById('wprog').style.width = (water/8*100)+'%';
+  if(water===8){ setExpr('panelZoe','emozionata'); panelMsg.textContent='8 su 8! Sei idratatissimo 🎉'; }
+  else if(water===0){ setExpr('panelZoe','pensierosa'); panelMsg.textContent='Nuovo giorno, si ricomincia!'; }
+  else { setExpr('panelZoe','ride'); panelMsg.textContent=['Glu glu! 💧','Brava/o, continua così!','Ancora '+(8-water)+' e ci siamo'][water%3]; }
+  wake();
+});
+let playing=false, pv=30, pt;
+document.getElementById('playBtn').addEventListener('click',e=>{
+  playing=!playing; e.currentTarget.textContent = playing?'⏸':'▶';
+  setExpr('panelZoe', playing?'innamorata':'contenta');
+  panelMsg.textContent = playing ? 'Che bella questa! 🎶' : 'Musica in pausa.';
+  clearInterval(pt); if(playing) pt=setInterval(()=>{ pv=(pv+1.5)%100; document.getElementById('prog').style.width=pv+'%'; },500);
+  wake();
+});
+
+/* Fly + idle / sleep behaviour */
+const fly = document.getElementById('fly'), stripZoe = document.getElementById('stripZoe'), panelZoe = document.getElementById('panelZoe');
+let lastAct = Date.now(), sleeping = false, t0 = performance.now(), demoVisible = false;
+function wake(){ lastAct = Date.now(); if(sleeping){ sleeping=false; setExpr('stripZoe','sorpresa'); setTimeout(()=>{ if(!sleeping) setExpr('stripZoe','felice'); },900); } }
+desktop.addEventListener('pointermove', wake);
+desktop.addEventListener('pointerdown', wake);
+new IntersectionObserver(es=>{ demoVisible = es[0].isIntersecting; if(demoVisible) lastAct = Date.now(); }).observe(desktop);
+
+function loop(now){
+  const t = (now - t0)/1000;
+  // fly buzzes around the strip
+  const W = desktop.clientWidth, H = desktop.clientHeight;
+  const fx = W/2 + Math.sin(t*1.3)*Math.min(240,W*.35) + Math.sin(t*5.1)*18;
+  const fy = 70 + Math.sin(t*2.1)*30 + Math.cos(t*6.3)*10 + (strip.classList.contains('open')? 220:0);
+  fly.style.transform = `translate(${fx}px,${fy}px)`;
+  const idle = Date.now() - lastAct;
+  if(demoVisible && !sleeping && !strip.classList.contains('open') && idle > 9000){ sleeping = true; setExpr('stripZoe','dorme'); }
+  const fr = fly.getBoundingClientRect();
+  document.querySelectorAll('svg.zoe').forEach(svg=>{
+    if(svg===stripZoe && !sleeping && idle > 2500) lookToward(svg, fr.left, fr.top);
+    else if(svg===panelZoe) lookToward(svg, mx, my);
+    else lookToward(svg, mx, my);
+  });
+  fly.style.opacity = sleeping ? .5 : 1;
+  requestAnimationFrame(loop);
+}
+
+/* ======== CHAT ======== */
+function genPass(){ const cs='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*?'; const a=new Uint32Array(16); crypto.getRandomValues(a); return Array.from(a,v=>cs[v%cs.length]).join(''); }
+const CMDS = [
+  {q:'Metti un po\' di musica rilassante', a:'Fatto! Ho avviato la tua playlist chill su Spotify 🎧', ex:'innamorata'},
+  {q:'Timer di 25 minuti per studiare', a:'Modalità focus attiva: 25 minuti di studio, poi 5 di pausa. Ti avviso io ⏱️', ex:'pensierosa'},
+  {q:'Ricordami di chiamare la mamma alle 18', a:'Segnato! Alle 18:00 ti ricordo di chiamare la mamma 📞', ex:'occhiolino'},
+  {q:'Che tempo fa domani?', a:'Domani a Milano 16°: sole la mattina, qualche nuvola nel pomeriggio ☀️', ex:'felice'},
+  {q:'Quanto sono 50 dollari in euro?', a:'Al cambio di oggi 50 USD sono circa 46 € 💶', ex:'contenta'},
+  {q:'Come si dice "buongiorno" in giapponese?', a:'おはようございます. Si legge <i>ohayō gozaimasu</i> 🇯🇵', ex:'emozionata'},
+  {q:'Sistema la mia scrivania', a:'Ho trovato 47 file sul desktop. Li divido in <b>Immagini</b>, <b>Documenti</b> e <b>Installer</b>?', ex:'pensierosa', confirm:true},
+  {q:'Spegni il PC tra un\'ora', a:'Ok, spegnimento programmato tra 60 minuti. Dimmi "annulla" se cambi idea 🌙', ex:'assonnata'},
+  {q:'Generami una password sicura', a:()=>`Eccola: <span class="mono">${genPass()}</span><br>L'ho copiata negli appunti 🔐`, ex:'occhiolino'},
+  {q:'Ci sono notizie importanti oggi?', a:'Ti leggo i 3 titoli principali di oggi? Ci metto meno di un minuto 📰', ex:'felice'},
+  {q:'Raccontami una barzelletta', a:'Perché il computer è andato dal dottore? Aveva un virus… ma non voleva fare il backup! 😄', ex:'ride'},
+  {q:'Sono stanco…', a:'Ehi, fai una pausa di 5 minuti. Alzati, bevi un bicchiere d\'acqua e guarda lontano dallo schermo. Io resto qui 💜', ex:'triste'}
+];
+const chipsEl = document.getElementById('chips'), body = document.getElementById('chatBody');
+let busy = false;
+function addMsg(html, who){ const m=document.createElement('div'); m.className='msg '+who; m.innerHTML=html; body.appendChild(m); body.scrollTop=body.scrollHeight; return m; }
+function reply(html, ex, cb){
+  const t = addMsg('<span class="typing"><span></span><span></span><span></span></span>','zo');
+  setExpr('chatZoe','pensierosa');
+  setTimeout(()=>{ t.innerHTML = html; body.scrollTop=body.scrollHeight; setExpr('chatZoe',ex); busy=false; cb&&cb(t); }, 900);
+}
+function ask(c, chip){
+  if(busy) return; busy = true;
+  chipsEl.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===chip));
+  addMsg(c.q,'me');
+  reply(typeof c.a==='function'?c.a():c.a, c.ex, m=>{
+    if(!c.confirm) return;
+    const acts = document.createElement('div'); acts.className='acts';
+    acts.innerHTML = '<button>Sì, procedi</button><button class="no">No</button>';
+    m.appendChild(acts);
+    acts.addEventListener('click',e=>{
+      const b=e.target.closest('button'); if(!b||busy) return; busy=true; const yes=!b.classList.contains('no'); acts.remove();
+      addMsg(yes?'Sì, procedi':'No, lascia stare','me');
+      reply(yes?'Fatto! Desktop pulito ✨ Ho creato 3 cartelle e non ho cancellato niente.':'Nessun problema, non tocco niente 👍', yes?'emozionata':'contenta');
+    });
+  });
+}
+CMDS.forEach(c=>{ const b=document.createElement('button'); b.className='chip'; b.textContent='"'+c.q+'"'; b.onclick=()=>ask(c,b); chipsEl.appendChild(b); });
+addMsg('Ciao! Sono qui. Prova a chiedermi qualcosa 👈','zo');
+
+/* ======== CUSTOMIZER ======== */
+let stageExpr = 'felice';
+function buildOpts(){
+  const ex = document.getElementById('optExpr');
+  Object.keys(EXPR).forEach(k=>{ const b=document.createElement('button'); b.className='opt'+(k===stageExpr?' on':''); b.textContent=k; b.onclick=()=>{ stageExpr=k; setExpr('stageZoe',k); document.getElementById('exLabel').textContent=k; mark(ex,b); }; ex.appendChild(b); });
+  const co = document.getElementById('optColor');
+  COLORS.forEach(c=>{ const b=document.createElement('button'); b.className='sw'+(c===S.color?' on':''); b.style.background=c; b.setAttribute('aria-label','Colore '+c); b.onclick=()=>{ S.color=c; save(); renderAll(); mark(co,b); }; co.appendChild(b); });
+  const ey = document.getElementById('optEyes');
+  [...Object.keys(EYE_SIZES),'stelle'].forEach(k=>{ const b=document.createElement('button'); b.className='opt'+(k===S.eyes?' on':''); b.textContent=k; b.onclick=()=>{ S.eyes=k; save(); renderAll(); mark(ey,b); }; ey.appendChild(b); });
+  const ac = document.getElementById('optAcc');
+  Object.keys(ACCS).forEach(k=>{ const b=document.createElement('button'); b.className='opt'+(k===S.acc?' on':''); b.textContent=k; b.onclick=()=>{ S.acc=k; save(); renderAll(); mark(ac,b); }; ac.appendChild(b); });
+  const ni = document.getElementById('nameInput'); ni.value = S.name;
+  ni.addEventListener('input',()=>{ S.name = ni.value.trim() || 'ZOE'; save(); document.querySelectorAll('.zname').forEach(n=>n.textContent=S.name); });
+}
+function mark(group, btn){ group.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===btn)); }
+buildOpts();
+
+/* Reveal on scroll */
+const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+renderAll();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
