@@ -1,0 +1,14 @@
+# Generati da XcodeGen (rigenerali con `xcodegen`)
+ZOE.xcodeproj/
+ZOE/Info.plist
+ZOE/ZOE.entitlements
+ZOEWidgets/Info.plist
+ZOEWidgets/ZOEWidgets.entitlements
+
+# Xcode e Swift Package Manager
+xcuserdata/
+DerivedData/
+.build/
+.swiftpm/
+Packages/ZoeKit/.build/
+Packages/ZoeKit/.swiftpm/

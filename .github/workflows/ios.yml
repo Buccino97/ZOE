@@ -1,0 +1,40 @@
+# Controllo automatico dell'app iPhone: test del parser e compilazione per il simulatore.
+# Gira su un Mac di GitHub solo quando cambia qualcosa in ios/ (o a mano da "Actions").
+name: iOS
+
+on:
+  pull_request:
+    paths: ["ios/**", ".github/workflows/ios.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Versione di Xcode
+        run: xcodebuild -version
+
+      - name: Test del parser (ZoeKit)
+        working-directory: ios/Packages/ZoeKit
+        run: swift test
+
+      - name: Installa XcodeGen
+        run: brew install xcodegen
+
+      - name: Genera il progetto Xcode
+        working-directory: ios
+        run: xcodegen
+
+      - name: Compila per il simulatore
+        working-directory: ios
+        run: |
+          xcodebuild -project ZOE.xcodeproj -scheme ZOE \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO -quiet build

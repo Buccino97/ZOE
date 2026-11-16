@@ -1,0 +1,12 @@
+// ─────────────────────────────────────────────────────────────────────────────
+//  CONFIGURAZIONE DI ZOE PER IPHONE  ·  modifica solo queste due righe
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 1) Un identificativo tutto tuo, al contrario come un indirizzo web.
+//    Esempio: com.mariorossi.zoe   (solo lettere minuscole, numeri e punti)
+ZOE_BUNDLE_PREFIX = com.example.zoe
+
+// 2) Il tuo Team ID Apple (10 caratteri, es. AB12CD34EF).
+//    Lo trovi su https://developer.apple.com/account  →  "Membership details".
+//    Puoi anche lasciarlo vuoto e sceglierlo poi in Xcode (Signing & Capabilities).
+DEVELOPMENT_TEAM =
