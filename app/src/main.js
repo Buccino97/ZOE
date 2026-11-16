@@ -75,6 +75,8 @@ function createTray() {
 function summon() {
   if (!win) return;
   win.setIgnoreMouseEvents(false);
+  // On macOS ZOE has no Dock icon, so the app itself must be activated before its window can take the keyboard.
+  if (process.platform === 'darwin') app.focus({ steal: true });
   win.focus();
 }
 
