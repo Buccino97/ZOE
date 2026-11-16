@@ -182,7 +182,11 @@ ios/
 - Il parser dei comandi è una traduzione riga per riga di `app/src/renderer/commands.js`. Se aggiungi un comando su PC, aggiungilo anche in `ZoeCore/Commands.swift` e nei test.
 - App e widget si scambiano i dati tramite un **App Group** (`group.<tuo identificativo>`).
 
-## Pubblicare su TestFlight / App Store (più avanti)
+## Pubblicare su TestFlight / App Store
+
+Senza Mac: segui [TESTFLIGHT.md](TESTFLIGHT.md), GitHub compila e carica l'app per te.
+
+Dal Mac:
 
 1. In Xcode, in alto scegli **Any iOS Device (arm64)** e poi **Product → Archive**.
 2. Nella finestra che si apre: **Distribute App → App Store Connect → Upload**.
