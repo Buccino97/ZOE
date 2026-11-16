@@ -31,8 +31,8 @@ Tutto resta sul telefono: niente account, niente server, niente dati inviati.
 
 ### Cosa ti serve
 
-- Un **Mac** con macOS 14.5 o più recente.
-- **Xcode 16** o più recente (gratuito, dal Mac App Store).
+- Un **Mac** con macOS 15.6 (Sequoia) o più recente.
+- **Xcode 26** o più recente, gratuito dal Mac App Store (Apple accetta solo app compilate con Xcode 26).
 - Un **iPhone con iOS 17** o più recente e il suo cavo. La Dynamic Island c'è su iPhone 14 Pro e modelli successivi; sugli altri iPhone il timer compare comunque nella schermata di blocco.
 - Il tuo account **Apple Developer Program** (quello da 99 $/anno).
 

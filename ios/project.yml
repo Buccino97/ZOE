@@ -55,6 +55,7 @@ targets:
           UIColorName: LaunchBackground
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+        UIRequiresFullScreen: true
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
         ZoeAppGroup: group.$(ZOE_BUNDLE_PREFIX)
@@ -67,6 +68,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(ZOE_BUNDLE_PREFIX)
         PRODUCT_NAME: ZOE
+        TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
 
@@ -103,6 +105,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(ZOE_BUNDLE_PREFIX).widgets
         PRODUCT_NAME: ZOEWidgets
+        TARGETED_DEVICE_FAMILY: "1"
         SKIP_INSTALL: YES
 
 schemes:
