@@ -1,0 +1,90 @@
+# Compila ZOE, la firma con il tuo account Apple e la carica su TestFlight.
+# Serve la chiave API di App Store Connect nei "secrets" del repository (vedi ios/TESTFLIGHT.md).
+# Senza chiave il flusso si ferma subito, senza errori.
+name: TestFlight
+
+on:
+  push:
+    branches: [claude/vibrant-lovelace-zoo9eq]
+    paths: ["ios/**", ".github/workflows/testflight.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: testflight
+  cancel-in-progress: false
+
+jobs:
+  testflight:
+    runs-on: macos-26
+    timeout-minutes: 45
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+    steps:
+      - name: Controlla la chiave API
+        id: key
+        run: |
+          if [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ] || [ -z "$ASC_KEY_P8" ]; then
+            echo "::notice::Chiave App Store Connect non configurata: salto il caricamento su TestFlight (vedi ios/TESTFLIGHT.md)."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.key.outputs.ready == 'true'
+
+      - name: Prepara XcodeGen e la chiave
+        if: steps.key.outputs.ready == 'true'
+        run: |
+          brew install xcodegen
+          # Toglie spazi e "a capo" finiti per sbaglio nei secret incollati.
+          KEY_ID=$(printf '%s' "$ASC_KEY_ID" | tr -d '[:space:]')
+          ISSUER_ID=$(printf '%s' "$ASC_ISSUER_ID" | tr -d '[:space:]')
+          echo "::add-mask::$KEY_ID"
+          echo "::add-mask::$ISSUER_ID"
+          mkdir -p "$RUNNER_TEMP/keys"
+          KEY_PATH="$RUNNER_TEMP/keys/AuthKey_$KEY_ID.p8"
+          printf '%s\n' "$ASC_KEY_P8" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | grep -v '^$' > "$KEY_PATH"
+          {
+            echo "KEY_ID=$KEY_ID"
+            echo "ISSUER_ID=$ISSUER_ID"
+            echo "KEY_PATH=$KEY_PATH"
+          } >> "$GITHUB_ENV"
+
+      - name: Genera il progetto
+        if: steps.key.outputs.ready == 'true'
+        working-directory: ios
+        run: xcodegen
+
+      - name: Archivia (firma automatica)
+        if: steps.key.outputs.ready == 'true'
+        working-directory: ios
+        run: |
+          xcodebuild -project ZOE.xcodeproj -scheme ZOE -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/ZOE.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$KEY_PATH" \
+            -authenticationKeyID "$KEY_ID" \
+            -authenticationKeyIssuerID "$ISSUER_ID" \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            -quiet archive
+
+      - name: Carica su TestFlight
+        if: steps.key.outputs.ready == 'true'
+        working-directory: ios
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/ZOE.xcarchive" \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$KEY_PATH" \
+            -authenticationKeyID "$KEY_ID" \
+            -authenticationKeyIssuerID "$ISSUER_ID"
+
+      - name: Cancella la chiave
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/keys"

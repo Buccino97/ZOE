@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+<title>ZOE</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="strip" class="strip">
+    <div class="row">
+      <svg class="zoe mini" id="miniZoe" viewBox="0 -12 120 112" aria-hidden="true"></svg>
+      <span class="clock" id="clock">--:--</span>
+      <span class="status" id="status"></span>
+      <span class="water" title="Bicchieri d'acqua oggi">💧 <span class="wcount">0</span>/8</span>
+    </div>
+
+    <div class="panel" id="panel">
+      <div class="side">
+        <svg class="zoe big" id="bigZoe" viewBox="0 -12 120 112" aria-hidden="true"></svg>
+        <p class="msg" id="msg">Ciao! Cosa facciamo?</p>
+      </div>
+      <div class="main">
+        <form id="cmdForm" autocomplete="off">
+          <input id="cmd" type="text" spellcheck="false" placeholder="Chiedimi qualcosa… es. «timer 10 minuti»">
+          <button type="button" id="gearBtn" class="icon" title="Personalizza">⚙︎</button>
+        </form>
+        <div class="widgets">
+          <div class="w" id="wTimer">
+            <h4>Timer</h4>
+            <b id="timerText">Nessuno</b>
+            <div class="w-actions">
+              <button data-cmd="focus 25 minuti">Focus 25'</button>
+              <button data-cmd="timer 5 minuti">5'</button>
+              <button id="timerStop" hidden>Stop</button>
+            </div>
+            <div class="prog"><i id="timerProg"></i></div>
+          </div>
+          <div class="w">
+            <h4>Acqua</h4>
+            <b><span class="wcount">0</span>/8</b> bicchieri
+            <div class="w-actions"><button data-cmd="ho bevuto un bicchiere">+1</button></div>
+            <div class="prog"><i id="waterProg" class="water-bar"></i></div>
+          </div>
+          <div class="w wide">
+            <h4>Promemoria</h4>
+            <ul id="remList"><li class="empty">Nessun promemoria. Prova «ricordami di chiamare Luca alle 18».</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings" id="settings" hidden>
+      <div class="set-head"><b>Personalizza</b><button id="closeSettings" class="icon" title="Chiudi">✕</button></div>
+      <label>Nome <input id="nameInput" type="text" maxlength="14"></label>
+      <div class="set-row"><span>Colore</span><div id="optColor" class="opts"></div></div>
+      <div class="set-row"><span>Occhi</span><div id="optEyes" class="opts"></div></div>
+      <div class="set-row"><span>Accessorio</span><div id="optAcc" class="opts"></div></div>
+      <div class="set-row"><span>Benessere</span><div class="opts"><label class="chk"><input type="checkbox" id="optWellness"> ricordami di bere ogni ora</label></div></div>
+      <div class="set-foot"><button id="quitBtn" class="ghost">Esci da ZOE</button></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+  <div class="fly" id="fly" hidden></div>
+
+  <script src="zoe.js"></script>
+  <script src="commands.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

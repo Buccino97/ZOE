@@ -1,0 +1,26 @@
+{
+  "name": "zoe",
+  "productName": "ZOE",
+  "version": "0.1.0",
+  "description": "ZOE, l'assistente desktop che vive in cima allo schermo",
+  "main": "src/main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac"
+  },
+  "devDependencies": {
+    "electron": "33.4.11",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "app.zoe.desktop",
+    "productName": "ZOE",
+    "files": ["src/**/*", "package.json"],
+    "win": { "target": "nsis" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "artifactName": "ZOE-Setup-${version}.exe" },
+    "mac": { "target": ["dmg"], "category": "public.app-category.productivity" }
+  }
+}
